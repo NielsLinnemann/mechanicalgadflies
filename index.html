@@ -1,24 +1,696 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Mechanical Gadflies. Coming soon.">
-  <title>Mechanical Gadflies</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Mechanical Gadflies — a two-day AutoPhil workshop on automating philosophy, 16–17 March 2027, Pinchat site, University of Geneva.">
+  <title>Mechanical Gadflies — Workshop, AutoPhil</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
-    body { margin: 0; min-height: 100svh; display: grid; place-items: center; background: #111827; color: #f9fafb; }
-    main { width: min(42rem, calc(100% - 3rem)); padding-block: 4rem; }
-    p { font-size: 1.125rem; line-height: 1.6; color: #cbd5e1; }
-    h1 { font-size: clamp(2.5rem, 8vw, 5rem); line-height: 1.05; letter-spacing: -.045em; margin-block: 1rem; }
-    .domain { font-size: 1rem; color: #93c5fd; }
+    /* ── Reset & base ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #1b2d45;
+      --navy2:  #243752;
+      --gold:   #b8872e;
+      --gold-l: #d9a84e;
+      --cream:  #faf8f3;
+      --sand:   #f0ece3;
+      --rule:   #d6cfc2;
+      --text:   #2b2b2b;
+      --muted:  #6b6355;
+      --serif:  'Libre Baskerville', Georgia, serif;
+      --sans:   'Source Sans 3', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--sans);
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--cream);
+    }
+
+    /* ── Nav ───────────────────────────────────────────────────────── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy);
+      display: flex; justify-content: center; flex-wrap: wrap;
+    }
+    nav a {
+      display: inline-block;
+      padding: 0.65rem 1.15rem;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: #fff; }
+
+    /* ── Hero ──────────────────────────────────────────────────────── */
+    #hero {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #14202f 0%, #1b2d45 55%, #2a3f5c 100%);
+      color: #fff;
+      padding: 5rem 2rem 9rem;
+      text-align: center;
+    }
+    #hero .mountains {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      width: 100%; height: 190px;
+      pointer-events: none;
+    }
+    #hero .stars {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at 28% 9%, rgba(255,255,255,0.35), transparent),
+        radial-gradient(1px 1px at 47% 22%, rgba(255,255,255,0.4), transparent),
+        radial-gradient(1px 1px at 66% 12%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1px 1px at 81% 25%, rgba(255,255,255,0.45), transparent),
+        radial-gradient(1px 1px at 92% 8%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(1.5px 1.5px at 6% 40%, rgba(217,168,78,0.5), transparent),
+        radial-gradient(1.5px 1.5px at 73% 38%, rgba(217,168,78,0.4), transparent);
+      pointer-events: none;
+    }
+    #hero > *:not(.mountains):not(.stars) { position: relative; z-index: 1; }
+
+    #hero .eyebrow {
+      font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--gold-l);
+      margin-bottom: 1.4rem;
+    }
+    #hero h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.7rem, 4vw, 2.8rem);
+      font-weight: 700; line-height: 1.25;
+      max-width: 820px; margin: 0 auto 0.5rem;
+    }
+    #hero h1 em { font-style: italic; color: var(--gold-l); }
+    #hero .subtitle {
+      font-family: var(--serif); font-style: italic;
+      font-size: clamp(1rem, 2.2vw, 1.35rem);
+      color: rgba(255,255,255,0.8);
+      margin: 0.9rem auto 0; max-width: 700px;
+    }
+    .hero-meta {
+      display: flex; justify-content: center; flex-wrap: wrap;
+      gap: 0.5rem 2.5rem; margin-top: 2.4rem;
+    }
+    .hero-meta span {
+      font-size: 0.9rem; color: rgba(255,255,255,0.7);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .hero-meta span::before {
+      content: ''; display: inline-block;
+      width: 5px; height: 5px;
+      background: var(--gold-l); border-radius: 50%;
+    }
+    .hero-cta {
+      margin-top: 2.2rem;
+      display: inline-flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.65rem 1.6rem; border-radius: 3px;
+      font-family: var(--sans); font-size: 0.85rem; font-weight: 600;
+      letter-spacing: 0.04em; text-decoration: none;
+      cursor: pointer; border: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-primary { background: var(--gold); color: #fff; }
+    .btn-primary:hover { background: var(--gold-l); }
+    .btn-outline {
+      background: transparent; color: rgba(255,255,255,0.85);
+      border: 1.5px solid rgba(255,255,255,0.4);
+    }
+    .btn-outline:hover { border-color: rgba(255,255,255,0.85); color: #fff; }
+
+    /* ── Draft banner ──────────────────────────────────────────────── */
+    .draft-banner {
+      background: var(--gold); color: #fff;
+      text-align: center; font-size: 0.82rem; font-weight: 600;
+      letter-spacing: 0.06em; padding: 0.45rem 1rem;
+    }
+
+    /* ── Sections ──────────────────────────────────────────────────── */
+    section { padding: 4rem 2rem; }
+    section:nth-of-type(even) { background: var(--sand); }
+    .container { max-width: 900px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.5rem;
+    }
+    h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.4rem, 3vw, 1.9rem);
+      font-weight: 700; color: var(--navy);
+      margin-bottom: 1.5rem; line-height: 1.25;
+    }
+    h3 {
+      font-family: var(--serif); font-size: 1.1rem; font-weight: 700;
+      color: var(--navy); margin-bottom: 0.4rem;
+    }
+    p { margin-bottom: 1rem; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── About / rationale ─────────────────────────────────────────── */
+    .epigraph {
+      max-width: 640px; margin: 0 0 2.4rem auto; text-align: right;
+    }
+    .epigraph p {
+      font-family: var(--serif); font-style: italic; font-size: 0.98rem;
+      color: var(--navy2); line-height: 1.65; margin-bottom: 0.5rem;
+    }
+    .epigraph cite {
+      font-style: normal; font-size: 0.78rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold);
+    }
+    .epigraph cite em { text-transform: none; letter-spacing: 0; }
+    #about .lead {
+      font-family: var(--serif); font-size: 1.08rem; font-style: italic;
+      color: var(--navy2);
+      border-left: 3px solid var(--gold);
+      padding-left: 1.2rem; margin-bottom: 1.5rem;
+    }
+    .placeholder {
+      position: relative;
+      border: 1.5px dashed var(--gold);
+      background: rgba(217,168,78,0.07);
+      padding: 2.2rem 1.6rem 1.6rem;
+      margin-top: 0.5rem;
+    }
+    .placeholder-tag {
+      position: absolute; top: -0.75rem; left: 1.2rem;
+      background: var(--gold); color: #fff;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 0.2rem 0.6rem; border-radius: 2px;
+    }
+    .two-days {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    @media (max-width: 620px) { .two-days { grid-template-columns: 1fr; } }
+    .day-teaser {
+      background: #fff; border: 1px solid var(--rule);
+      border-top: 3px solid var(--gold); padding: 1.3rem 1.4rem;
+    }
+    .day-teaser .when {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--gold);
+    }
+    .day-teaser p { font-size: 0.92rem; color: var(--muted); }
+
+    /* ── Speakers ──────────────────────────────────────────────────── */
+    .speaker-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem; margin-top: 1rem;
+    }
+    .speaker-card {
+      background: var(--cream);
+      border: 1px solid var(--rule);
+      border-top: 3px solid var(--navy);
+      padding: 1.4rem 1.5rem;
+    }
+    section:nth-of-type(even) .speaker-card { background: #fff; }
+    .speaker-card.tbc { border-top-color: var(--rule); }
+    .speaker-badge {
+      display: inline-block;
+      font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 0.2rem 0.5rem; border-radius: 2px;
+      margin-bottom: 0.7rem; margin-right: 0.3rem;
+    }
+    .badge-invited { background: var(--navy); color: rgba(255,255,255,0.9); }
+    .badge-organiser { background: var(--gold); color: #fff; }
+    .badge-tba     { background: var(--rule); color: var(--muted); }
+    .speaker-card .role   { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.3rem; }
+    .speaker-card .domain { font-size: 0.83rem; color: var(--muted); font-style: italic; }
+    .speaker-card a { font-size: 0.8rem; color: var(--gold); text-decoration: none; }
+    .speaker-card a:hover { text-decoration: underline; }
+    .speaker-card .topic {
+      font-family: var(--serif); font-size: 0.9rem; color: var(--navy2);
+      margin: 0.6rem 0 0.5rem; line-height: 1.5;
+    }
+    .speaker-card .topic span {
+      display: block; font-family: var(--sans); font-size: 0.68rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold);
+    }
+    .speaker-card .day-tag {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--navy); margin-top: 0.6rem;
+    }
+
+    /* ── Schedule ──────────────────────────────────────────────────── */
+    .schedule-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2rem; margin-top: 1rem;
+    }
+    @media (max-width: 720px) { .schedule-wrap { grid-template-columns: 1fr; } }
+    .day-block {
+      background: var(--cream);
+      border: 1px solid var(--rule); padding: 1.5rem;
+    }
+    section:nth-of-type(even) .day-block { background: #fff; }
+    .day-block h3 {
+      font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+      font-family: var(--sans); font-weight: 600; color: var(--navy);
+      margin-bottom: 0.3rem; padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--navy);
+    }
+    .day-theme {
+      font-family: var(--serif); font-style: italic;
+      color: var(--gold); font-size: 0.98rem; margin: 0.6rem 0 0.4rem;
+    }
+    .sched-row {
+      display: flex; gap: 1rem;
+      padding: 0.45rem 0.3rem;
+      border-bottom: 1px solid var(--rule);
+      font-size: 0.88rem; align-items: flex-start;
+    }
+    .sched-row:last-child { border-bottom: none; }
+    .sched-time {
+      flex-shrink: 0; width: 100px;
+      color: var(--muted); font-variant-numeric: tabular-nums;
+    }
+    .sched-event { flex: 1; }
+    .sched-row.highlight .sched-event { color: var(--navy); font-weight: 600; }
+    .sched-row.break-row { opacity: 0.6; font-style: italic; }
+    .sched-row.short-break { font-size: 0.8rem; padding: 0.2rem 0.3rem; }
+    .sched-speaker { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; font-weight: 400; }
+    .tba { font-weight: 400; font-style: italic; color: var(--muted); }
+    .text-muted { color: var(--muted); font-size: 0.9rem; }
+    .mt-2 { margin-top: 1rem; }
+
+    /* ── Practical ─────────────────────────────────────────────────── */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem; margin-top: 1rem;
+    }
+    .info-card {
+      padding: 1.4rem 1.5rem;
+      background: var(--cream); border: 1px solid var(--rule);
+    }
+    section:nth-of-type(even) .info-card { background: #fff; }
+    .info-card h3 {
+      font-size: 0.72rem; font-family: var(--sans); font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--gold); margin-bottom: 0.5rem;
+    }
+    .info-card p { font-size: 0.9rem; color: var(--muted); }
+    .info-card p strong { color: var(--text); }
+
+    /* ── Organisers ────────────────────────────────────────────────── */
+    .funder-list { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.8rem; }
+    .funder-pill {
+      display: inline-block; padding: 0.4rem 1rem;
+      background: var(--navy); color: rgba(255,255,255,0.85);
+      font-size: 0.82rem; font-weight: 600; border-radius: 2px;
+      letter-spacing: 0.03em;
+    }
+    .funder-pill.tbc { background: var(--rule); color: var(--muted); }
+
+    /* ── Footer ────────────────────────────────────────────────────── */
+    footer {
+      background: #111b28; color: rgba(255,255,255,0.45);
+      text-align: center; padding: 1.8rem 2rem; font-size: 0.8rem;
+    }
   </style>
 </head>
 <body>
-  <main>
-    <p class="domain">mechanicalgadflies.org</p>
-    <h1>Mechanical Gadflies</h1>
-    <p>Coming soon.</p>
-  </main>
+
+  <!-- ── Navigation ─────────────────────────────────────────────────── -->
+  <nav aria-label="Page sections">
+    <a href="#about">About</a>
+    <a href="#speakers">Speakers</a>
+    <a href="#schedule">Schedule</a>
+    <a href="#practical">Practical</a>
+    <a href="#organizers">Contact</a>
+  </nav>
+
+  <div class="draft-banner">Draft — speaker list anonymized, invitations not yet confirmed</div>
+
+  <!-- ── Hero ───────────────────────────────────────────────────────── -->
+  <header id="hero">
+    <div class="stars" aria-hidden="true"></div>
+    <p class="eyebrow">Workshop — AutoPhil collaboration</p>
+    <h1><em>Mechanical Gadflies</em><br>Can AI Do Philosophy — and Should It?</h1>
+    <p class="subtitle">A two-day workshop: one day on the how-to, one day on the why</p>
+    <div class="hero-meta">
+      <span>16–17 March 2027</span>
+      <span>Pinchat site, University of Geneva</span>
+      <span>Two days · invited speakers</span>
+    </div>
+    <div class="hero-cta">
+      <a href="#schedule" class="btn btn-primary">View Schedule</a>
+      <a href="#speakers" class="btn btn-outline">Speakers</a>
+    </div>
+    <svg class="mountains" viewBox="0 0 1440 190" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 190 L0 120 L90 70 L150 105 L240 30 L320 95 L380 60 L470 120 L560 50 L640 100 L720 20 L800 90 L880 55 L960 115 L1050 40 L1130 95 L1210 65 L1300 110 L1380 75 L1440 95 L1440 190 Z" fill="#243752" opacity="0.65"/>
+      <path d="M240 30 L262 48 L250 47 L240 56 L228 46 Z M720 20 L745 42 L731 40 L720 50 L708 41 Z M1050 40 L1070 58 L1058 56 L1050 64 L1040 55 Z" fill="#faf8f3" opacity="0.55"/>
+      <path d="M0 190 L0 150 L120 110 L210 140 L330 95 L440 145 L560 105 L690 150 L800 115 L910 150 L1030 110 L1150 145 L1270 112 L1380 140 L1440 125 L1440 190 Z" fill="#faf8f3"/>
+    </svg>
+  </header>
+
+  <!-- ── About / Rationale ──────────────────────────────────────────── -->
+  <section id="about">
+    <div class="container">
+      <p class="section-label">About the Workshop</p>
+      <h2>Rationale</h2>
+
+      <blockquote class="epigraph">
+        <p>"And when they have been once written down they are tumbled about anywhere among those who may or may not understand them, and know not to whom they should reply, to whom not: and, if they are maltreated or abused, they have no parent to protect them; and they cannot protect or defend themselves."</p>
+        <cite>Socrates, in Plato's <em>Phaedrus</em> 275e (trans. Benjamin Jowett)</cite>
+      </blockquote>
+
+      <div class="placeholder">
+        <span class="placeholder-tag">Placeholder text — to be revised</span>
+        <p class="lead">
+          Can an AI system produce philosophy worth reading, and if it can, what should philosophers do about it?
+        </p>
+        <p>
+          This workshop grows out of <strong>AutoPhil</strong>, a collaboration on the automation of philosophical research. Over the past year, AI systems have moved from summarising philosophical literature to drafting full papers, reconstructing arguments, and running autonomous research loops with little human guidance. A philosophy article largely written by an AI agent has already appeared in a leading journal, and benchmark projects are now testing whether AI can generate genuinely novel philosophical ideas instead of merely restating existing ones.
+        </p>
+        <p>
+          These developments raise two families of questions. The first is practical: what does it take to build and use systems that do philosophy? Which pipelines, prompting strategies, agent architectures, argument-mapping tools, and evaluation methods actually work, and where do they fail? The second is foundational: what would it mean for philosophy, as a discipline and a practice, to be partly automated? Is philosophical understanding something that can be delegated? What happens to authorship, credit, and peer review? And what is lost, or gained, when the slow work of thinking is accelerated?
+        </p>
+        <p>
+          The workshop takes up both families in turn. <strong>Day one</strong> is devoted to the how-to: researchers who have built or used AI systems for philosophical work present their methods, results, and failures, followed by a hands-on session. <strong>Day two</strong> turns to the why, and whether: the epistemic, methodological, and normative questions raised by automating philosophy, including who counts as the author of AI-assisted work, and what philosophers should make of it.
+        </p>
+      </div>
+
+      <div class="two-days">
+        <div class="day-teaser">
+          <span class="when">Day 1</span>
+          <h3>The How-To</h3>
+          <p>Building, using and testing AI systems that do philosophy: agents that draft papers, map arguments and run research with varying degrees of autonomy, plus a hands-on lab.</p>
+        </div>
+        <div class="day-teaser">
+          <span class="when">Day 2</span>
+          <h3>The Why (and Whether)</h3>
+          <p>What automation means for philosophical understanding, authorship and the discipline, and whether, how far, and for whom we should want it.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Speakers ───────────────────────────────────────────────────── -->
+  <section id="speakers">
+    <div class="container">
+      <p class="section-label">Speakers</p>
+      <h2>Participants</h2>
+      <p class="text-muted">Invitations have not been sent yet. Speaker names are withheld until participation is confirmed; roles and proposed topics below are working drafts by the organisers.</p>
+
+      <div class="speaker-grid">
+
+        <div class="speaker-card">
+          <span class="speaker-badge badge-invited">Invited Speaker</span><span class="speaker-badge badge-tba">To be invited</span>
+          <h3>Speaker A</h3>
+          <p class="role">Professor of Philosophy of Science — research institute working on argumentation &amp; LLM tooling</p>
+          <p class="domain">Argumentation &amp; critical thinking for LLMs</p>
+          <p class="topic"><span>Proposed topic</span>Mapping and evaluating arguments with LLMs</p>
+          <p class="day-tag">Day 1</p>
+        </div>
+
+        <div class="speaker-card">
+          <span class="speaker-badge badge-invited">Invited Speaker</span><span class="speaker-badge badge-tba">To be invited</span>
+          <h3>Speaker B</h3>
+          <p class="role">Chair and Professor of Jurisprudence, major research university</p>
+          <p class="domain">Practical reason · Value theory · AI benchmarking for philosophy</p>
+          <p class="topic"><span>Proposed topic</span>What would it take for an AI to do philosophy? Lessons from a philosophy benchmark</p>
+          <p class="day-tag">Day 2</p>
+        </div>
+
+        <div class="speaker-card">
+          <span class="speaker-badge badge-invited">Invited Speaker</span><span class="speaker-badge badge-tba">To be invited</span>
+          <h3>Speaker C</h3>
+          <p class="role">Associate Professor of Philosophy, East Asia</p>
+          <p class="domain">Philosophy of AI · AI safety · AI-assisted drafting workflows</p>
+          <p class="topic"><span>Proposed topic</span>Writing philosophy with AI agents: a drafting workflow and an AI-written journal article</p>
+          <p class="day-tag">Day 1</p>
+        </div>
+
+        <div class="speaker-card">
+          <span class="speaker-badge badge-invited">Invited Speaker</span><span class="speaker-badge badge-tba">To be invited</span>
+          <h3>Speaker D</h3>
+          <p class="role">Research Group Leader, digital society institute</p>
+          <p class="domain">Philosophy &amp; NLP · Reasoning and inference in LLMs</p>
+          <p class="topic"><span>Proposed topic</span>Can language models navigate the space of reasons? Inference and the limits of automated philosophy</p>
+          <p class="day-tag">Day 2</p>
+        </div>
+
+        <div class="speaker-card">
+          <span class="speaker-badge badge-invited">Invited Speaker</span><span class="speaker-badge badge-tba">To be invited</span>
+          <h3>Speaker E</h3>
+          <p class="role">Design informatics institute, Western Europe</p>
+          <p class="domain">Philosophy of AI · Authorship, creativity &amp; responsibility</p>
+          <p class="topic"><span>Proposed topic</span>Who is the author? AI, responsibility and authorship gaps in philosophical writing</p>
+          <p class="day-tag">Day 2</p>
+        </div>
+
+        <div class="speaker-card">
+          <span class="speaker-badge badge-invited">Invited Speaker</span><span class="speaker-badge badge-tba">To be invited</span>
+          <h3>Speaker F</h3>
+          <p class="role">Associate Professor of Philosophy, North America</p>
+          <p class="domain">Philosophy of science &amp; biology · Language models as tools for philosophers</p>
+          <p class="topic"><span>Proposed topic</span>What working philosophers want from AI: challenging assumptions, clarifying ideas, developing concepts</p>
+          <p class="day-tag">Day 2</p>
+        </div>
+
+        <div class="speaker-card">
+          <span class="speaker-badge badge-invited">Speaker</span><span class="speaker-badge badge-organiser">Co-organiser</span>
+          <h3>Speaker G</h3>
+          <p class="role">University of Geneva</p>
+          <p class="domain">On Benedicto</p>
+          <p class="topic"><span>Proposed topic</span>Benedicto (title and focus to be specified)</p>
+          <p class="day-tag">Day 1</p>
+        </div>
+
+        <div class="speaker-card">
+          <span class="speaker-badge badge-invited">Invited Speaker</span><span class="speaker-badge badge-tba">To be invited</span>
+          <h3>Speaker H</h3>
+          <p class="role">International Research Fellow in Philosophy, East Asia</p>
+          <p class="domain">Philosophy of language · Inferentialism · Autonomous philosophy research</p>
+          <p class="topic"><span>Proposed topic</span>Autonomous philosophy: what AI systems produce with minimal human guidance, and where they fail</p>
+          <p class="day-tag">Day 1</p>
+        </div>
+
+        <div class="speaker-card tbc">
+          <span class="speaker-badge badge-tba">Name TBC</span>
+          <h3>Computer scientist (TBC)</h3>
+          <p class="role">Affiliation TBC</p>
+          <p class="domain">Computer scientist working on automating philosophy</p>
+          <p class="topic"><span>Proposed topic</span>Hands-on experience: building and running AI pipelines for philosophical research</p>
+          <p class="day-tag">Day 1 · also leads the hands-on lab</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Schedule ───────────────────────────────────────────────────── -->
+  <section id="schedule">
+    <div class="container">
+      <p class="section-label">Programme</p>
+      <h2>Preliminary Schedule</h2>
+      <p class="text-muted">16–17 March 2027, Pinchat site, University of Geneva. Topics are working proposals; titles to be announced. All talks are 45 minutes plus 15 minutes of discussion, with longer coffee breaks for conversation.</p>
+
+      <div class="schedule-wrap">
+
+        <!-- Day 1 -->
+        <div class="day-block">
+          <h3>Day 1 · The How-To</h3>
+          <p class="day-theme">Building, using and testing AI systems that do philosophy</p>
+
+          <div class="sched-row">
+            <span class="sched-time">09:30 – 09:45</span>
+            <div class="sched-event">Welcome &amp; introduction to AutoPhil</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">09:45 – 10:45</span>
+            <div class="sched-event">
+              Writing philosophy with AI agents: a drafting workflow and an AI-written journal article
+              <div class="sched-speaker">Speaker C</div>
+            </div>
+          </div>
+          <div class="sched-row break-row">
+            <span class="sched-time">10:45 – 11:30</span>
+            <div class="sched-event">Coffee break</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">11:30 – 12:30</span>
+            <div class="sched-event">
+              Autonomous philosophy: what AI systems produce with minimal human guidance, and where they fail
+              <div class="sched-speaker">Speaker H</div>
+            </div>
+          </div>
+          <div class="sched-row break-row">
+            <span class="sched-time">12:30 – 13:45</span>
+            <div class="sched-event">Lunch</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">13:45 – 14:45</span>
+            <div class="sched-event">
+              Mapping and evaluating arguments with LLMs
+              <div class="sched-speaker">Speaker A</div>
+            </div>
+          </div>
+          <div class="sched-row break-row short-break">
+            <span class="sched-time">14:45 – 14:50</span>
+            <div class="sched-event">Short break</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">14:50 – 15:50</span>
+            <div class="sched-event">
+              Benedicto <span class="tba">(title and focus to be specified)</span>
+              <div class="sched-speaker">Speaker G</div>
+            </div>
+          </div>
+          <div class="sched-row break-row">
+            <span class="sched-time">15:50 – 16:35</span>
+            <div class="sched-event">Coffee break</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">16:35 – 17:35</span>
+            <div class="sched-event">
+              Hands-on experience: building and running AI pipelines for philosophical research
+              <div class="sched-speaker">Computer scientist (TBC)</div>
+            </div>
+          </div>
+          <div class="sched-row break-row short-break">
+            <span class="sched-time">17:35 – 17:40</span>
+            <div class="sched-event">Short break</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">17:40 – 18:40</span>
+            <div class="sched-event">
+              Hands-on lab: bring your own project
+              <div class="sched-speaker">Live demos and joint experimentation, led by the computer scientist (TBC)</div>
+            </div>
+          </div>
+          <div class="sched-row break-row">
+            <span class="sched-time">19:30</span>
+            <div class="sched-event">Workshop dinner</div>
+          </div>
+        </div>
+
+        <!-- Day 2 -->
+        <div class="day-block">
+          <h3>Day 2 · The Why (and Whether)</h3>
+          <p class="day-theme">What automating philosophy means for understanding, authorship and the discipline</p>
+
+          <div class="sched-row highlight">
+            <span class="sched-time">09:30 – 10:30</span>
+            <div class="sched-event">
+              What would it take for an AI to do philosophy? Lessons from a philosophy benchmark
+              <div class="sched-speaker">Speaker B</div>
+            </div>
+          </div>
+          <div class="sched-row break-row">
+            <span class="sched-time">10:30 – 11:15</span>
+            <div class="sched-event">Coffee break</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">11:15 – 12:15</span>
+            <div class="sched-event">
+              What working philosophers want from AI: challenging assumptions, clarifying ideas, developing concepts
+              <div class="sched-speaker">Speaker F</div>
+            </div>
+          </div>
+          <div class="sched-row break-row">
+            <span class="sched-time">12:15 – 13:30</span>
+            <div class="sched-event">Lunch</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">13:30 – 14:30</span>
+            <div class="sched-event">
+              Can language models navigate the space of reasons? Inference and the limits of automated philosophy
+              <div class="sched-speaker">Speaker D</div>
+            </div>
+          </div>
+          <div class="sched-row break-row short-break">
+            <span class="sched-time">14:30 – 14:35</span>
+            <div class="sched-event">Short break</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">14:35 – 15:35</span>
+            <div class="sched-event">
+              Who is the author? AI, responsibility and authorship gaps in philosophical writing
+              <div class="sched-speaker">Speaker E</div>
+            </div>
+          </div>
+          <div class="sched-row break-row">
+            <span class="sched-time">15:35 – 16:20</span>
+            <div class="sched-event">Coffee break</div>
+          </div>
+          <div class="sched-row highlight">
+            <span class="sched-time">16:20 – 17:35</span>
+            <div class="sched-event">
+              Roundtable: Should we automate philosophy?
+              <div class="sched-speaker">All speakers</div>
+            </div>
+          </div>
+          <div class="sched-row">
+            <span class="sched-time">17:35</span>
+            <div class="sched-event">Closing</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Practical ──────────────────────────────────────────────────── -->
+  <section id="practical">
+    <div class="container">
+      <p class="section-label">Practical Information</p>
+      <h2>Attending the Workshop</h2>
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>Date</h3>
+          <p><strong>16–17 March 2027</strong></p>
+        </div>
+        <div class="info-card">
+          <h3>Venue</h3>
+          <p><strong>Pinchat site, University of Geneva</strong><br>16 March: room 0-010 (42 seats)<br>17 March: room 0-003 (20 seats)</p>
+        </div>
+        <div class="info-card">
+          <h3>Format</h3>
+          <p><strong>Two days</strong><br>Invited talks, a hands-on lab, and a closing roundtable.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Organisers ─────────────────────────────────────────────────── -->
+  <section id="organizers">
+    <div class="container">
+      <p class="section-label">Contact</p>
+      <h2>Organisers</h2>
+      <p>The workshop is organised within the AutoPhil collaboration by three equal-contribution co-organisers (listed alphabetically).</p>
+      <div class="funder-list">
+        <span class="funder-pill">Eliot du Sordet (University of Neuchâtel)</span>
+        <span class="funder-pill">Niels Linnemann (University of Geneva)</span>
+        <span class="funder-pill">Igor Silva Pinto (University of Geneva)</span>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Mechanical Gadflies · An AutoPhil workshop on automating philosophy · 2027
+  </footer>
+
 </body>
 </html>
